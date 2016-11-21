@@ -1,0 +1,3 @@
+#!/bin/sh
+mkdir -p results
+exec mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
