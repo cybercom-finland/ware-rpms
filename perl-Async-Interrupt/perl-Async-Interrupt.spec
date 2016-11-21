@@ -5,7 +5,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   1.21
-Release:   0.0%{?dist}
+Release:   0.0
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/search?query=%{pkgname}
@@ -29,7 +29,7 @@ None.
 
 
 %prep
-%setup -q -n %{pkgname}-%{version} 
+%setup -n %{pkgname}-%{version}
 chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 [ -f Makefile.PL ] && perl -pi -e 's/^auto_install\;//' Makefile.PL
 
