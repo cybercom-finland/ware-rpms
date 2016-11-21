@@ -6,9 +6,9 @@ Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   1.21
 Release:   0.0%{?dist}
-License:   Artistic
-Group:     Applications/CPAN
-Url:       http://www.cpan.org
+License:   GPL+ or Artistic
+Group:     Development/Libraries
+Url:       http://search.cpan.org/search?query=%{pkgname}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Buildarch: noarch # Has XS file(s) at MANIFEST
 Source:    http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Async-Interrupt-1.21.tar.gz
