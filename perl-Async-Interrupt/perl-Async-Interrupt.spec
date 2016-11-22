@@ -29,7 +29,7 @@ None.
 
 
 %prep
-%setup -n %{pkgname}-%{version}
+%setup -q -n %{pkgname}-%{version}
 chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 [ -f Makefile.PL ] && perl -pi -e 's/^auto_install\;//' Makefile.PL
 
