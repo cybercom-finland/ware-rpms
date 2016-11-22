@@ -10,7 +10,7 @@
 
 Name:           brotli
 Version:        0.4.0
-Release:        104.0.%{gitrev}
+Release:        104.1.%{gitrev}
 Summary:        Brotli compression format
 
 License:        MIT
@@ -106,6 +106,7 @@ for a in enc dec common; do
   perl -pi -e 's,\#include \"\./(.*?)\",#include <brotli/'"$a"'/$1>,' "$a"/*.h
   install -m 0644 "$a"/*.h $RPM_BUILD_ROOT/%{_includedir}/brotli/"$a"/
 done
+install -m 0644 include/brotli/*.h $RPM_BUILD_ROOT/%{_includedir}/brotli/
 
 install -m 0644 libbrotli.a $RPM_BUILD_ROOT/%{_libdir}/
 
@@ -144,6 +145,7 @@ cp -a tests.orig tests
 
 %files devel
 %license LICENSE
+%{_includedir}/brotli/*.h
 %{_includedir}/brotli/*/*.h
 %{_libdir}/*.a
 
@@ -152,6 +154,9 @@ cp -a tests.orig tests
 %doc README.md docs/*
 
 %changelog
+* Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-104.1.211
+- add public includes
+
 * Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-104.0.211
 - 0.4.0 gitrev 211
 
