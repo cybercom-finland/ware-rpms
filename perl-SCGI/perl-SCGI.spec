@@ -8,21 +8,27 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.6
-Release:   0.0
+Release:   1.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
-Url:       http://search.cpan.org/search?query=%{pkgname}
+Url:       http://search.cpan.org/dist/SCGI/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch: noarch
 Source:    http://search.cpan.org//CPAN/authors/id/V/VI/VIPERCODE/SCGI-0.6.tar.gz
+
+%if 0%{?fedora} >= 25
+BuildRequires: perl-generators
+%endif
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION) >= 5.8.0
+%else
 BuildRequires: perl >= 5.8.0
+%endif
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
-%if 0%{?fedora} || 0%{?rhel} > 5
-BuildRequires: perl-devel
-%endif
 BuildRequires: perl(Module::Build)
+
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
@@ -84,5 +90,8 @@ fi
 
 
 %changelog
+* Wed Nov 23 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.6-1.0
+- fix spec to support F25
+
 * Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.6-0.0
 - 0.6
