@@ -1,4 +1,4 @@
-# ../common/perl-template  perl-SCGI
+# ../common/perl-template SCGI
 #
 
 %define pkgname SCGI
@@ -14,7 +14,7 @@ Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/SCGI/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch: noarch
-Source:    http://search.cpan.org//CPAN/authors/id/V/VI/VIPERCODE/SCGI-0.6.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/V/VI/VIPERCODE/SCGI-0.6.tar.gz
 
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators

@@ -1,3 +1,6 @@
+# ../common/perl-template Socket-Mmsg
+#
+
 %define pkgname Socket-Mmsg
 %define filelist %{pkgname}-%{version}-filelist
 %define NVR %{pkgname}-%{version}-%{release}
@@ -5,22 +8,26 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.02
-Release:   1.0
+Release:   2.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
-Url:       http://search.cpan.org/search?query=%{pkgname}
+Url:       http://search.cpan.org/dist/Socket-Mmsg/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# Buildarch: noarch # Has XS file(s) at MANIFEST
-Source:    http://search.cpan.org//CPAN/authors/id/H/HI/HITHIM/Socket-Mmsg-0.02.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/H/HI/HITHIM/Socket-Mmsg-0.02.tar.gz
 Patch1:    try.patch
-BuildRequires: perl
-BuildRequires: perl(ExtUtils::MakeMaker)
-BuildRequires: perl(ExtUtils::Manifest)
-BuildRequires: perl(Test::Harness)
-BuildRequires: perl(Test::More)
+
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildRequires: perl-devel
 %endif
+%if 0%{?fedora} >= 25
+BuildRequires: perl-generators
+%endif
+BuildRequires: perl
+BuildRequires: perl(ExtUtils::Manifest)
+BuildRequires: perl(Test::Harness)
+BuildRequires: perl(Test::More)
+BuildRequires: perl(ExtUtils::MakeMaker)
+
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
@@ -83,5 +90,8 @@ fi
 
 
 %changelog
+* Wed Nov 23 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.02-2.0
+- fix spec to support F25
+
 * Mon Nov 21 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.02-1.0
 - 0.02 with local patch

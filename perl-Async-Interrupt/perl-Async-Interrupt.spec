@@ -1,3 +1,6 @@
+# ../common/perl-template Async-Interrupt
+#
+
 %define pkgname Async-Interrupt
 %define filelist %{pkgname}-%{version}-filelist
 %define NVR %{pkgname}-%{version}-%{release}
@@ -5,22 +8,26 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   1.21
-Release:   0.0
+Release:   1.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
-Url:       http://search.cpan.org/search?query=%{pkgname}
+Url:       http://search.cpan.org/dist/Async-Interrupt/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# Buildarch: noarch # Has XS file(s) at MANIFEST
 Source:    http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Async-Interrupt-1.21.tar.gz
+
+%if 0%{?fedora} || 0%{?rhel} > 5
+BuildRequires: perl-devel
+%endif
+%if 0%{?fedora} >= 25
+BuildRequires: perl-generators
+%endif
 BuildRequires: perl
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
 BuildRequires: perl(common::sense)
-%if 0%{?fedora} || 0%{?rhel} > 5
-BuildRequires: perl-devel
-%endif
+
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
@@ -82,5 +89,8 @@ fi
 
 
 %changelog
+* Wed Nov 23 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 1.21-1.0
+- fix spec to support F25
+
 * Mon Nov 21 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 1.21-0.0
 - 1.21
