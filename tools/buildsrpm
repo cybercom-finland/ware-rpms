@@ -1,3 +1,7 @@
 #!/bin/sh
+set -e -x
+rm -rf results
 mkdir -p results
-exec mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+pigz results/*.log
+exec copr-cli build ware results/*.src.rpm
