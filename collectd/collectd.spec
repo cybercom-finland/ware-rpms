@@ -4,7 +4,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.6.2
-Release: 0.2%{?dist}
+Release: 0.3%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -245,7 +245,11 @@ This plugin collects data from IPVS.
 Summary:       Java bindings for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: java-devel
+%if 0%{?fedora} || 0%{?rhel} >= 6
+BuildRequires: java-1.8.0-openjdk-devel
+%else
+BuildRequires: java-1.7.0-openjdk-devel
+%endif
 BuildRequires: jpackage-utils
 %description java
 These are the Java bindings for collectd.
@@ -495,6 +499,7 @@ BuildRequires: varnish-libs-devel
 This plugin collects information about Varnish, an HTTP accelerator.
 
 
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %ifnarch ppc ppc64 sparc sparc64
 %package virt
 Summary:       Libvirt plugin for collectd
@@ -504,6 +509,7 @@ BuildRequires: libvirt-devel
 BuildRequires: libxml2-devel
 %description virt
 This plugin collects information from virtualized guests.
+%endif
 %endif
 
 
@@ -573,6 +579,7 @@ touch src/pinba.proto
 
 
 %build
+PATH="$PATH:/usr/pgsql-9.4/bin" \
 %configure \
     --disable-dependency-tracking \
     --disable-silent-rules \
@@ -612,13 +619,14 @@ touch src/pinba.proto
     --disable-xmms \
     --disable-zone \
 %if 0%{?rhel} > 0 && 0%{?rhel} <= 5
-    --disable-dns \
     --disable-curl_json \
+    --disable-dns \
     --disable-ethstat \
     --disable-iptables \
     --disable-notify_desktop \
     --disable-python \
     --disable-turbostat \
+    --disable-virt \
 %endif
 %if 0%{?rhel} > 0 && 0%{?rhel} <= 6
     --disable-ceph \
@@ -648,6 +656,9 @@ make %{?_smp_mflags}
 
 
 %install
+%if 0%{?rhel} > 0 && 0%{?rhel} <= 5
+rm -rf %{buildroot}
+%endif
 rm -rf contrib/SpamAssassin
 make install DESTDIR=%{buildroot}
 
@@ -693,9 +704,9 @@ cp %{SOURCE96} %{buildroot}%{_sysconfdir}/collectd.d/snmp.conf
 cp %{SOURCE97} %{buildroot}%{_sysconfdir}/collectd.d/rrdtool.conf
 
 # configs for subpackaged plugins
-mods="ipmi libvirt perl ping postgresql"
+mods="ipmi perl ping postgresql"
 %if 0%{?fedora} || 0%{?rhel} >= 6
-mods="$mods dns"
+mods="$mods dns libvirt"
 %endif
 %ifnarch s390 s390x
 mods="$mods nut"
@@ -749,8 +760,10 @@ fi
 
 
 %files
-%if 0%{?fedora} || 0%{?rhel} >= 6
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %license COPYING
+%else
+%doc COPYING
 %endif
 %doc AUTHORS ChangeLog README
 %config(noreplace) %{_sysconfdir}/collectd.conf
@@ -761,7 +774,9 @@ fi
 %endif
 %exclude %{_sysconfdir}/collectd.d/email.conf
 %exclude %{_sysconfdir}/collectd.d/ipmi.conf
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %exclude %{_sysconfdir}/collectd.d/libvirt.conf
+%endif
 %exclude %{_sysconfdir}/collectd.d/mysql.conf
 %exclude %{_sysconfdir}/collectd.d/nginx.conf
 %ifnarch s390 s390x
@@ -892,7 +907,11 @@ fi
 %doc %{_mandir}/man1/collectdmon.1*
 %doc %{_mandir}/man5/collectd.conf.5*
 %doc %{_mandir}/man5/collectd-exec.5*
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %doc %{_mandir}/man5/collectd-python.5*
+%else
+%exclude %{_mandir}/man5/collectd-python.5*
+%endif
 %doc %{_mandir}/man5/collectd-threshold.5*
 %doc %{_mandir}/man5/collectd-unixsock.5*
 %doc %{_mandir}/man5/types.db.5*
@@ -1132,10 +1151,12 @@ fi
 %{_libdir}/collectd/varnish.so
 
 
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %ifnarch ppc ppc64 sparc sparc64
 %files virt
 %{_libdir}/collectd/virt.so
 %config(noreplace) %{_sysconfdir}/collectd.d/libvirt.conf
+%endif
 %endif
 
 
@@ -1170,6 +1191,9 @@ fi
 
 
 %changelog
+* Wed Dec  7 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 5.6.2-0.3
+- fix RHEL-5 RHEL-6
+
 * Wed Dec  7 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 5.6.2-0.2
 - support Fedora 25/26 and RHEL-5 and RHEL-6
 
