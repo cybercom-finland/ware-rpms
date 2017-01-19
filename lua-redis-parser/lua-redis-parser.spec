@@ -19,7 +19,7 @@
 
 Name:           lua-redis-parser
 Version:        0.12
-Release:        0.1
+Release:        0.2%{?dist}
 Summary:        Redis reply parser and request constructor library for Lua
 
 Group:          Development/Libraries
