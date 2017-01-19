@@ -19,7 +19,7 @@
 
 Name:           lua-resty-core
 Version:        0.1.9
-Release:        0.0
+Release:        0.1%{?dist}
 Summary:        New FFI-based Lua API for the ngx_lua module
 
 Group:          Development/Libraries
