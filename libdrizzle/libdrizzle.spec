@@ -3,7 +3,7 @@
 Summary: Drizzle Client & Protocol Library
 Name: libdrizzle
 Version: 1.0
-Release: 0.2.%{date}
+Release: 0.4.%{date}%{?dist}
 # All code is BSD, except libdrizzle/sha1.{c,h} which are Public Domain
 License: BSD and Public Domain
 Group: System Environment/Libraries
@@ -17,7 +17,11 @@ BuildRequires: curl-devel
 BuildRequires: doxygen
 BuildRequires: intltool
 BuildRequires: libgcrypt-devel
+%if 0%{?fedora} || 0%{?rhel} > 5
 BuildRequires: libuuid-devel
+%else
+BuildRequires: e2fsprogs-devel
+%endif
 BuildRequires: pam-devel
 BuildRequires: pcre-devel
 BuildRequires: protobuf-devel
@@ -54,7 +58,7 @@ cp -a %{SOURCE1} .
 
 %configure --without-server
 %build
-%{make_build} libdrizzle-1.0
+%{__make} %{?_smp_mflags} libdrizzle-1.0
 
 %install
 rm -rf %{buildroot}
