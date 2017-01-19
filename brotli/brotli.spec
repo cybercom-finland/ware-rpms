@@ -10,7 +10,7 @@
 
 Name:           brotli
 Version:        0.4.0
-Release:        104.1.%{gitrev}
+Release:        104.2.%{gitrev}
 Summary:        Brotli compression format
 
 License:        MIT
@@ -87,7 +87,7 @@ cp -a tests tests.orig
 %py3_build
 %endif
 
-%{make_build} CFLAGS="%{optflags} -fPIC" CXXFLAGS="%{optflags} -fPIC" LDFLAGS="-pie" all
+%{__make} %{?_smp_mflags} CFLAGS="%{optflags} -fPIC" CXXFLAGS="%{optflags} -fPIC" LDFLAGS="-pie" all
 
 %install
 %if 0%{?rhel} && 0%{?rhel} <= 7
