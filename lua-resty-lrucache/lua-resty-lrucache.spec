@@ -19,7 +19,7 @@
 
 Name:           lua-resty-lrucache
 Version:        0.04
-Release:        0.1
+Release:        0.2%{?dist}
 Summary:        Lua-land LRU Cache based on LuaJIT FFI
 
 Group:          Development/Libraries
