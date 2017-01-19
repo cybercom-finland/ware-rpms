@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.002001
-Release:   0.0%{?dist}
+Release:   0.2%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/IO-Compress-Brotli/
@@ -22,7 +22,7 @@ BuildRequires: perl-devel
 BuildRequires: perl-generators
 %endif
 %if 0%{?fedora} >= 25
-BuildRequires: perl(:VERSION) >= 5.14
+BuildRequires: perl(:VERSION) >= 5.14.0
 %else
 BuildRequires: perl >= 5.014000
 %endif
@@ -95,5 +95,5 @@ fi
 
 
 %changelog
-* Thu Feb 10 2005 mach@aarpora
-- Initial build.
+* Thu Jan 19 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 0.002001-0.1
+- 0.002001
