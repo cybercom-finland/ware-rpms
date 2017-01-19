@@ -4,4 +4,7 @@ rm -rf results
 mkdir -p results
 mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
 pigz results/*.log
-exec copr-cli build ware results/*.src.rpm
+if [ -f .exclude-chroot ]; then
+    exec copr-cli build $(echo $(copr-cli list maage |egrep maage/ware|fgrep -v -f .exclude-chroot|sed 's/^ *//;s/:.*//;s/^/-r /g')) ware results/*.src.rpm
+fi
+exec copr-cli build "$@" ware results/*.src.rpm
