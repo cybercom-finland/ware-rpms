@@ -19,7 +19,7 @@
 
 Name:           lua-resty-redis
 Version:        0.26
-Release:        0.0
+Release:        0.1%{?dist}
 Summary:        Lua redis client driver for the ngx_lua based on the cosocket API
 
 Group:          Development/Libraries
