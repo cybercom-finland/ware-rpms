@@ -3,7 +3,7 @@
 
 Name:           sregex
 Version:        0.0.1rc1
-Release:        %{git_num}.1
+Release:        %{git_num}.1%{?dist}
 Summary:        Software tool for fast regexps
 
 Group:          System Environment/Libraries
