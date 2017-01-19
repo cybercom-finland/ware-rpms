@@ -3,8 +3,9 @@
 
 Name:           %{rname}21
 Version:        2.1.0
-Release:        0.0.%{date}
+Release:        0.1.%{date}%{?dist}
 Summary:        Just-In-Time Compiler for Lua
+Group:          Development/Languages
 License:        MIT
 URL:            http://luajit.org/
 Source0:        https://github.com/openresty/luajit2/archive/v2.1-%{date}.tar.gz#/%{rname}2-2.1-%{date}.tar.gz
@@ -20,6 +21,7 @@ Lua interpreter and can be deployed as a drop-in replacement.
 
 %package devel
 Summary:        Development files for %{rname}
+Group:          Development/Languages
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Conflicts:      luajit-devel = 2.0.3
 Conflicts:      luajit-devel = 2.0.4
@@ -52,7 +54,7 @@ make amalg Q= E=@: PREFIX=%{_prefix} TARGET_STRIP=: \
 %install
 # PREREL= - disable -betaX suffix
 # INSTALL_TNAME - executable name
-%make_install PREFIX=%{_prefix} \
+%{__make} install DESTDIR=%{?buildroot} PREFIX=%{_prefix} \
               %{?multilib_flag}
 
 rm -rf _tmp_html ; mkdir _tmp_html
