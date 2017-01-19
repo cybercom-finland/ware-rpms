@@ -18,14 +18,17 @@
 %define lua51dir %{_builddir}/lua51-%{name}-%{version}-%{release}
 
 Name:           lua-cjson
-Version:        2.1.0
-Release:        0.2
+Version:        2.1.0.4
+Release:        0.0%{?dist}
 Summary:        A fast JSON encoding/parsing module for Lua
 
 Group:          Development/Libraries
 License:        MIT
-URL:            http://www.kyne.com.au/~mark/software/lua-cjson.php
-Source0:        http://www.kyne.com.au/~mark/software/download/%{name}-%{version}.tar.gz
+# https://github.com/mpx/lua-cjson
+#URL:            http://www.kyne.com.au/~mark/software/lua-cjson.php
+#Source0:        http://www.kyne.com.au/~mark/software/download/%{name}-%{version}.tar.gz
+URL:            https://github.com/openresty/lua-cjson
+Source0:        https://github.com/openresty/lua-cjson/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  lua-devel
@@ -112,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE NEWS performance.html performance.txt manual.html manual.txt rfc4627.txt THANKS
+%doc LICENSE NEWS performance.txt manual.txt rfc4627.txt THANKS README.md
 %{lualibdir}/*
 %{luapkgdir}/*
 %{_bindir}/*
@@ -120,13 +123,16 @@ rm -rf $RPM_BUILD_ROOT
 %if 0%{?fedora} >= 20
 %files compat
 %defattr(-,root,root,-)
-%doc LICENSE NEWS performance.html performance.txt manual.html manual.txt rfc4627.txt THANKS
+%doc LICENSE NEWS performance.txt manual.txt rfc4627.txt THANKS README.md
 %{luacompatlibdir}/*
 %{luacompatpkgdir}/*
 %endif
 
 
 %changelog
+* Thu Jan 19 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 2.1.0.4-0.0
+- use for from openresty: 2.1.0.4
+
 * Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 2.1.0-0.2
 - fix build in F24
 
