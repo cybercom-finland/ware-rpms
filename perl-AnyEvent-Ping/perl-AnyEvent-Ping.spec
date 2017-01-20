@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.011
-Release:   0.0%{?dist}
+Release:   0.1%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/AnyEvent-Ping/
@@ -93,5 +93,5 @@ fi
 
 
 %changelog
-* Thu Feb 10 2005 mach@aarpora
-- Initial build.
+* Fri Jan 20 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 0.011-0.1
+- 0.011
