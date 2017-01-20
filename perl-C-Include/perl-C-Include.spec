@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   1.40
-Release:   0.0%{?dist}
+Release:   0.1%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/C-Include/
@@ -86,5 +86,5 @@ fi
 
 
 %changelog
-* Thu Feb 10 2005 mach@aarpora
-- Initial build.
+* Fri Jan 20 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 1.40-0.1
+- 1.40
