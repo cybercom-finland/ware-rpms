@@ -1,0 +1,26 @@
+From efb578dfd73b7d8a254fbdd3af53b051f9be6ca1 Mon Sep 17 00:00:00 2001
+From: Fedora systemd team <systemd-maint@redhat.com>
+Date: Wed, 25 Jan 2017 18:21:13 +0200
+Subject: [PATCH] bz#1413099 fix systemd in docker
+
+---
+ src/core/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/core/main.c b/src/core/main.c
+index f59a55f..15e9b52 100644
+--- a/src/core/main.c
++++ b/src/core/main.c
+@@ -1524,7 +1524,8 @@ int main(int argc, char *argv[]) {
+                  * need to do that for user instances since they never log
+                  * into the console. */
+                 log_show_color(colors_enabled());
+-                make_null_stdio();
++                if (detect_container() <= 0)
++                        make_null_stdio();
+         }
+ 
+         /* Initialize default unit */
+-- 
+2.9.3
+
