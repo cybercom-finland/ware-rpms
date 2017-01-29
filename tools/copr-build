@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e -x
+
+repo=ware
+if [ -f .repo ]; then
+    repo=$(cat .repo)
+fi
+
+rm -rf results
+mkdir -p results
+if [ -f .dist ]; then
+    mock -r $(cat .dist) --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+else
+    mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+fi
+pigz results/*.log
+if [ -f .exclude-chroot ]; then
+    exec copr-cli build $(echo $(copr-cli list maage |egrep maage/"$repo"|fgrep -v -f .exclude-chroot|sed 's/^ *//;s/:.*//;s/^/-r /g')) "$repo" results/*.src.rpm
+fi
+exec copr-cli build "$@" "$repo" results/*.src.rpm

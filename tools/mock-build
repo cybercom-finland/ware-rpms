@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e -x
+
+repo=ware
+if [ -f .repo ]; then
+    repo=$(cat .repo)
+fi
+
+rm -rf results
+mkdir -p results
+if [ -f .dist ]; then
+    mock -r $(cat .dist) --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+    pigz results/*.log
+    exec mock -r $(cat .dist) --rebuild results/*.src.rpm
+else
+    mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+    pigz results/*.log
+    exec mock --rebuild results/*.src.rpm
+fi
