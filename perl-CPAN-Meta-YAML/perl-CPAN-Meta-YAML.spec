@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.018
-Release:   0.0%{?dist}
+Release:   1.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/CPAN-Meta-YAML/
@@ -19,7 +19,15 @@ Source:    http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-YAML-0
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
-BuildRequires: perl
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter >= 5.8.1
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION) >= 5.8.1
+%else
+BuildRequires: perl >= 5.8.1
+%endif
+%endif
 BuildRequires: perl(B)
 BuildRequires: perl(Carp)
 BuildRequires: perl(Exporter)
@@ -107,5 +115,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.018-1.0
+- f27
+
 * Wed Apr  5 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 0.018-0.0
 - initial

@@ -1,21 +1,24 @@
-# ../common/perl-template -dist=RHEL-7 C-Include
+# ../common/perl-template -tag=ware -dist=RHEL-7 Net-Ping
 #
 
-%define pkgname C-Include
+%define pkgname Net-Ping
 %define filelist %{pkgname}-%{version}-filelist
 %define NVR %{pkgname}-%{version}-%{release}
 
-Name:      perl-%{pkgname}
+Name:      perl-%{pkgname}-ware
 Summary:   %{pkgname} - Perl module
-Version:   1.40
-Release:   1.0%{?dist}
+Version:   2.58
+Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
-Url:       http://search.cpan.org/dist/C-Include/
+Url:       http://search.cpan.org/dist/Net-Ping/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch: noarch
-Source:    http://search.cpan.org/CPAN/authors/id/A/AM/AMICHAUER/C-Include-1.40.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/Net-Ping-2.58.tar.gz
 
+%if 0%{?fedora} || 0%{?rhel} > 5
+BuildRequires: perl-devel
+%endif
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
@@ -30,8 +33,14 @@ BuildRequires: perl
 %endif
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
+BuildRequires: perl(Socket) >= 2.007
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
+BuildRequires: perl(Text::Template) >= 1.10
+BuildRequires: perl(Time::HiRes)
+BuildRequires: perl(CPAN::Meta)
+BuildRequires: perl(CPAN::Meta::YAML) >= 0.011
+BuildRequires: perl(JSON:PP) >= 2.27300
 
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -47,7 +56,7 @@ chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 
 
 %build
-# No clean network
+# no clean network
 export PERL_CORE=1
 if [ -f Makefile.PL ]; then
   #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=%{buildroot} INSTALLDIRS=vendor
@@ -55,7 +64,7 @@ if [ -f Makefile.PL ]; then
   make
   make test
 elif [ -f Build.PL ]; then
-  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL --prefix=%{buildroot}%{_prefix} --installdirs=vendor
+  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
   ./Build
   ./Build test
 fi
@@ -72,6 +81,8 @@ if [ -f Makefile.PL ]; then
 elif [ -f Build.PL ]; then
   ./Build install destdir=%{buildroot} create_packlist=0
 fi
+
+rm -rf %{buildroot}%{_mandir}/man3/*
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
@@ -96,8 +107,5 @@ fi
 
 
 %changelog
-* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 1.40-1.0
-- f27
-
-* Fri Jan 20 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 1.40-0.1
-- 1.40
+* Wed Apr  5 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 2.58-0.0
+- initial

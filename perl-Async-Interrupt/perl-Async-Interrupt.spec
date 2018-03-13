@@ -1,4 +1,4 @@
-# ../common/perl-template Async-Interrupt
+# ../common/perl-template -dist=RHEL-7 Async-Interrupt
 #
 
 %define pkgname Async-Interrupt
@@ -7,13 +7,13 @@
 
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
-Version:   1.21
-Release:   1.0%{?dist}
+Version:   1.22
+Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/Async-Interrupt/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source:    http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Async-Interrupt-1.21.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Async-Interrupt-1.22.tar.gz
 
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildRequires: perl-devel
@@ -21,7 +21,15 @@ BuildRequires: perl-devel
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION)
+%else
 BuildRequires: perl
+%endif
+%endif
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(Test::Harness)
@@ -42,13 +50,15 @@ chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 
 
 %build
+# No clean network
+export PERL_CORE=1
 if [ -f Makefile.PL ]; then
   #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=%{buildroot} INSTALLDIRS=vendor
   CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
   make
   make test
 elif [ -f Build.PL ]; then
-  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
+  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL --prefix=%{buildroot}%{_prefix} --installdirs=vendor
   ./Build
   ./Build test
 fi
@@ -89,6 +99,9 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 1.22-0.0
+- 1.22
+
 * Wed Nov 23 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 1.21-1.0
 - fix spec to support F25
 

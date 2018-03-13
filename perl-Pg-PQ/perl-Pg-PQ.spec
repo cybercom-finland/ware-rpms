@@ -1,4 +1,4 @@
-# ../common/perl-template Pg-PQ
+# ../common/perl-template -dist=RHEL-7 Pg-PQ
 #
 
 %define pkgname Pg-PQ
@@ -7,13 +7,13 @@
 
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
-Version:   0.14
+Version:   0.15
 Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/Pg-PQ/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source:    http://search.cpan.org/CPAN/authors/id/S/SA/SALVA/Pg-PQ-0.14.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/S/SA/SALVA/Pg-PQ-0.15.tar.gz
 
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildRequires: perl-devel
@@ -21,7 +21,15 @@ BuildRequires: perl-devel
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION)
+%else
 BuildRequires: perl
+%endif
+%endif
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(Test::Harness)
@@ -42,13 +50,16 @@ chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 
 
 %build
+# No clean network
+export PERL_CORE=1
 if [ -f Makefile.PL ]; then
   #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=%{buildroot} INSTALLDIRS=vendor
   CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
+  perl -pi -e 's/-Werror=declaration-after-statement//g' Makefile
   make
   make test
 elif [ -f Build.PL ]; then
-  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
+  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL --prefix=%{buildroot}%{_prefix} --installdirs=vendor
   ./Build
   ./Build test
 fi
@@ -89,5 +100,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.15-0.0
+- 0.15
+
 * Thu Jan 19 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 0.14-0.0
 - 0.14

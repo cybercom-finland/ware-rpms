@@ -1,21 +1,23 @@
-# ../common/perl-template -dist=RHEL-7 C-Include
+# ../common/perl-template -dist=RHEL-7 Algorithm-FastPermute
 #
 
-%define pkgname C-Include
+%define pkgname Algorithm-FastPermute
 %define filelist %{pkgname}-%{version}-filelist
 %define NVR %{pkgname}-%{version}-%{release}
 
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
-Version:   1.40
-Release:   1.0%{?dist}
+Version:   0.999
+Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
-Url:       http://search.cpan.org/dist/C-Include/
+Url:       http://search.cpan.org/dist/Algorithm-FastPermute/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Buildarch: noarch
-Source:    http://search.cpan.org/CPAN/authors/id/A/AM/AMICHAUER/C-Include-1.40.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/R/RO/ROBIN/Algorithm-FastPermute-0.999.tar.gz
 
+%if 0%{?fedora} || 0%{?rhel} > 5
+BuildRequires: perl-devel
+%endif
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
@@ -28,7 +30,6 @@ BuildRequires: perl(:VERSION)
 BuildRequires: perl
 %endif
 %endif
-BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
@@ -96,8 +97,5 @@ fi
 
 
 %changelog
-* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 1.40-1.0
-- f27
-
-* Fri Jan 20 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 1.40-0.1
-- 1.40
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.999-0.0
+- initial

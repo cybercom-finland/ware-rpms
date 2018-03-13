@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.011
-Release:   0.1%{?dist}
+Release:   1.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/AnyEvent-Ping/
@@ -19,10 +19,15 @@ Source:    http://search.cpan.org/CPAN/authors/id/U/UN/UNDEF/AnyEvent-Ping-0.011
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter >= 5.8.1
+BuildRequires: perl(Module::Install)
+%else
 %if 0%{?fedora} >= 25
 BuildRequires: perl(:VERSION) >= 5.8.1
 %else
 BuildRequires: perl >= 5.8.1
+%endif
 %endif
 BuildRequires: perl(AnyEvent)
 BuildRequires: perl(Carp)
@@ -93,5 +98,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.011-1.0
+- F27
+
 * Fri Jan 20 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 0.011-0.1
 - 0.011

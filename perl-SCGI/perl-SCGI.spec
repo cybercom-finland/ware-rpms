@@ -1,4 +1,4 @@
-# ../common/perl-template SCGI
+# ../common/perl-template -dist=RHEL-7 SCGI
 #
 
 %define pkgname SCGI
@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   0.6
-Release:   1.0%{?dist}
+Release:   2.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/SCGI/
@@ -19,15 +19,20 @@ Source:    http://search.cpan.org/CPAN/authors/id/V/VI/VIPERCODE/SCGI-0.6.tar.gz
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter >= 5.8.0
+%else
 %if 0%{?fedora} >= 25
 BuildRequires: perl(:VERSION) >= 5.8.0
 %else
 BuildRequires: perl >= 5.8.0
 %endif
+%endif
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Module::Build)
+BuildRequires: perl(JSON::PP) >= 2.27300
 
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -43,13 +48,16 @@ chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 
 
 %build
+#breaks epel7
+## No clean network
+#export PERL_CORE=1
 if [ -f Makefile.PL ]; then
   #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=%{buildroot} INSTALLDIRS=vendor
   CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
   make
   make test
 elif [ -f Build.PL ]; then
-  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
+  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL --prefix=%{buildroot}%{_prefix} --installdirs=vendor
   ./Build
   ./Build test
 fi
@@ -90,6 +98,9 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.6-2.0
+- f27
+
 * Wed Nov 23 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.6-1.0
 - fix spec to support F25
 

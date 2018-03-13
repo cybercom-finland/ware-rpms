@@ -7,21 +7,30 @@
 
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
-Version:   2.27400
+Version:   2.97001
 Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/JSON-PP/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch: noarch
-Source:    http://search.cpan.org/CPAN/authors/id/M/MA/MAKAMAKA/JSON-PP-2.27400.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/I/IS/ISHIGAKI/JSON-PP-2.97001.tar.gz
 
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION)
+%else
 BuildRequires: perl
+%endif
+%endif
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
+BuildRequires: perl(Scalar::Util) >= 1.08
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
 
@@ -39,13 +48,15 @@ chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 
 
 %build
+# No clean network
+export PERL_CORE=1
 if [ -f Makefile.PL ]; then
   #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=%{buildroot} INSTALLDIRS=vendor
   CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
   make
   make test
 elif [ -f Build.PL ]; then
-  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
+  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL --prefix=%{buildroot}%{_prefix} --installdirs=vendor
   ./Build
   ./Build test
 fi
@@ -86,5 +97,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 2.97001-0.0
+- 2.97001
+
 * Wed Apr  5 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 2.27400-0.0
 - initial

@@ -7,19 +7,27 @@
 
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
-Version:   2.000005
+Version:   2.000006
 Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/Role-Tiny/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch: noarch
-Source:    http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/Role-Tiny-2.000005.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/Role-Tiny-2.000006.tar.gz
 
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
-BuildRequires: perl
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter >= 5.006
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION) >= 5.006
+%else
+BuildRequires: perl >= 5.006
+%endif
+%endif
 BuildRequires: perl(Exporter) >= 5.57
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(ExtUtils::MakeMaker)
@@ -89,5 +97,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 2.000006-0.0
+- 2.000006
+
 * Wed Apr  5 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 2.000005-0.0
 - initial

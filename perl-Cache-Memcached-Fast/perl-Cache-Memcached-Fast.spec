@@ -1,4 +1,4 @@
-# ../common/perl-template Cache-Memcached-Fast
+# ../common/perl-template -dist=RHEL-7 Cache-Memcached-Fast
 #
 
 %define pkgname Cache-Memcached-Fast
@@ -7,13 +7,13 @@
 
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
-Version:   0.23
-Release:   0.1%{?dist}
+Version:   0.25
+Release:   0.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/Cache-Memcached-Fast/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source:    http://search.cpan.org/CPAN/authors/id/K/KR/KROKI/Cache-Memcached-Fast-0.23.tar.gz
+Source:    http://search.cpan.org/CPAN/authors/id/R/RA/RAZ/Cache-Memcached-Fast-0.25.tar.gz
 
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildRequires: perl-devel
@@ -21,18 +21,26 @@ BuildRequires: perl-devel
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION)
+%else
 BuildRequires: perl
+%endif
+%endif
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Manifest)
+BuildRequires: perl(Storable)
 BuildRequires: perl(Test::Harness)
 BuildRequires: perl(Test::More)
-BuildRequires: perl(Storable)
 
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
 %description
-None.
+Perl client for memcached, in C language
 
 
 %prep
@@ -42,13 +50,15 @@ chmod -R u+w %{_builddir}/%{pkgname}-%{version}
 
 
 %build
+# No clean network
+export PERL_CORE=1
 if [ -f Makefile.PL ]; then
   #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=%{buildroot} INSTALLDIRS=vendor
   CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
   make
   make test
 elif [ -f Build.PL ]; then
-  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL PREFIX=%{buildroot}%{_prefix} INSTALLDIRS=vendor
+  CFLAGS="$RPM_OPT_FLAGS" perl Build.PL --prefix=%{buildroot}%{_prefix} --installdirs=vendor
   ./Build
   ./Build test
 fi
@@ -89,5 +99,8 @@ fi
 
 
 %changelog
-* Fri Jan 20 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 0.23-0.1
-- 0.23
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.25-0.0
+- 0.25
+
+* Thu Feb 10 2005 mach@aarpora
+- Initial build.

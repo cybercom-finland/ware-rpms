@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   1.070
-Release:   0.0%{?dist}
+Release:   1.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/Log-Trace/
@@ -19,7 +19,15 @@ Source:    http://search.cpan.org/CPAN/authors/id/B/BB/BBC/Log-Trace-1.070.tar.g
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION)
+%else
 BuildRequires: perl
+%endif
+%endif
 BuildRequires: perl(ExtUtils::Manifest)
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(Test::Harness)
@@ -88,5 +96,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 1.070-1.0
+- f27
+
 * Wed Apr  5 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 1.070-0.0
 - initial

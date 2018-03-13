@@ -8,7 +8,7 @@
 Name:      perl-%{pkgname}
 Summary:   %{pkgname} - Perl module
 Version:   2.150010
-Release:   0.0%{?dist}
+Release:   1.0%{?dist}
 License:   GPL+ or Artistic
 Group:     Development/Libraries
 Url:       http://search.cpan.org/dist/CPAN-Meta/
@@ -19,7 +19,15 @@ Source:    http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-2.1500
 %if 0%{?fedora} >= 25
 BuildRequires: perl-generators
 %endif
-BuildRequires: perl
+%if 0%{?fedora} >= 27
+BuildRequires: perl-interpreter >= 5.8.1
+%else
+%if 0%{?fedora} >= 25
+BuildRequires: perl(:VERSION) >= 5.8.1
+%else
+BuildRequires: perl >= 5.8.1
+%endif
+%endif
 BuildRequires: perl(CPAN::Meta::Requirements) >= 2.121
 BuildRequires: perl(CPAN::Meta::YAML) >= 0.011
 BuildRequires: perl(Carp)
@@ -110,5 +118,8 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 2.150010-1.0
+- f27
+
 * Wed Apr  5 2017 Markus Linnala <Markus.Linnala@cybercom.com> - 2.150010-0.0
 - initial
