@@ -15,6 +15,6 @@ else
 fi
 pigz results/*.log
 if [ -f .exclude-chroot ]; then
-    exec copr-cli build $(echo $(copr-cli list maage |egrep maage/"$repo"|fgrep -v -f .exclude-chroot|sed 's/^ *//;s/:.*//;s/^/-r /g')) "$repo" results/*.src.rpm
+    exec copr-cli build $(echo $(copr-cli list maage |egrep maage/"$repo"|fgrep -v -f .exclude-chroot|sed 's/^ *//;s/:.*//;s/^/-r /g'|sort -u)) "$repo" results/*.src.rpm
 fi
 exec copr-cli build "$@" "$repo" results/*.src.rpm
