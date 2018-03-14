@@ -1,20 +1,27 @@
-#!/bin/sh
+#!/bin/bash
 set -e -x
 
 repo=ware
 if [ -f .repo ]; then
-    repo=$(cat .repo)
+    repo="$(cat .repo)"
 fi
 
 rm -rf results
 mkdir -p results
+
+opts=()
 if [ -f .dist ]; then
-    mock -r $(cat .dist) --buildsrpm --spec *.spec --sources SOURCES --resultdir results
-else
-    mock --buildsrpm --spec *.spec --sources SOURCES --resultdir results
+    opts+=(-r "$(cat .dist)")
 fi
+opts+=(--buildsrpm --spec *.spec --sources SOURCES --resultdir results)
+mock "${opts[@]}"
+
 pigz results/*.log
+
+opts=(--nowait)
 if [ -f .exclude-chroot ]; then
-    exec copr-cli build $(echo $(copr-cli list maage |egrep maage/"$repo"|fgrep -v -f .exclude-chroot|sed 's/^ *//;s/:.*//;s/^/-r /g'|sort -u)) "$repo" results/*.src.rpm
+    while read o; do
+        opts+=(-r "$o")
+    done < <(copr-cli list maage | sed -rn '/^Name: '"$repo"'$/,/^$/{/maage\/'"$repo"'/{s/^ *//;s/:.*//;p}}' | fgrep -v -f .exclude-chroot)
 fi
-exec copr-cli build "$@" "$repo" results/*.src.rpm
+exec copr-cli build "${opts[@]}" "$@" "$repo" results/*.src.rpm
