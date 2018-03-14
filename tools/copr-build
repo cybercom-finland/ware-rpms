@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e -x
 
+user=palvelin
 repo=ware
 if [ -f .repo ]; then
     repo="$(cat .repo)"
@@ -18,10 +19,10 @@ mock "${opts[@]}"
 
 pigz results/*.log
 
-opts=(--nowait)
+opts=() # --nowait builds are stuck in importing
 if [ -f .exclude-chroot ]; then
     while read o; do
         opts+=(-r "$o")
-    done < <(copr-cli list maage | sed -rn '/^Name: '"$repo"'$/,/^$/{/maage\/'"$repo"'/{s/^ *//;s/:.*//;p}}' | fgrep -v -f .exclude-chroot)
+    done < <(copr-cli list "$user" | sed -rn '/^Name: '"$repo"'$/,/^$/{/'"$user"'\/'"$repo"'/{s/^ *//;s/:.*//;p}}' | fgrep -v -f .exclude-chroot)
 fi
-exec copr-cli build "${opts[@]}" "$@" "$repo" results/*.src.rpm
+exec copr-cli build "${opts[@]}" "$@" "$user"/"$repo" results/*.src.rpm
