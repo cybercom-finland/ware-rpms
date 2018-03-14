@@ -3,7 +3,7 @@
 
 Name:           sregex
 Version:        0.0.1rc1
-Release:        %{git_num}.1%{?dist}
+Release:        %{git_num}.2%{?dist}
 Summary:        Software tool for fast regexps
 
 Group:          System Environment/Libraries
@@ -11,6 +11,7 @@ License:        BSD 3 clause
 URL:            https://github.com/openresty/sregex/
 Source0:        https://github.com/openresty/sregex/tarball/master?/openresty-sregex-v%{version}-%{git_num}-g%{git_rev}.tar.gz
 Patch0:         0001-silence-warning-about-if-guard.patch
+Patch1:         0002-add-current-dir-to-prove-I.patch
 BuildRequires:  perl-Test-Harness
 BuildRequires:  perl-Test-Base
 BuildRequires:  perl(IPC::Run3)
@@ -44,6 +45,7 @@ developing applications that use %{name}.
 %prep
 %setup -q -n openresty-sregex-%{git_rev}
 %patch0 -p1
+%patch1 -p1
 perl -pi -e 's,/lib(\s*$|/),/%{_lib}$1,g' Makefile
 
 
@@ -79,5 +81,8 @@ make -k %{?_smp_mflags} test
 
 
 %changelog
+* Wed Mar 14 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.0.1rc1-37.2
+- prove needs to have -I. for some cases
+
 * Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.0.1rc1-37.1
 - 0.0.1rc1 git_num 37
