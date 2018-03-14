@@ -18,8 +18,8 @@
 %define lua51dir %{_builddir}/lua51-%{name}-%{version}-%{release}
 
 Name:           lua-redis-parser
-Version:        0.12
-Release:        0.2%{?dist}
+Version:        0.13
+Release:        0.0%{?dist}
 Summary:        Redis reply parser and request constructor library for Lua
 
 Group:          Development/Libraries
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.13-0.0
+- 0.13
+
 * Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.12-0.1
 - fix build in F24
 

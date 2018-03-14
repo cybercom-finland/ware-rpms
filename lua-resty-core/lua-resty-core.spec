@@ -18,8 +18,8 @@
 %define lua51dir %{_builddir}/lua51-%{name}-%{version}-%{release}
 
 Name:           lua-resty-core
-Version:        0.1.9
-Release:        0.1%{?dist}
+Version:        0.1.14rc1
+Release:        0.0%{?dist}
 Summary:        New FFI-based Lua API for the ngx_lua module
 
 Group:          Development/Libraries
@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.1.14rc1-0.0
+- 0.1.14rc1
+
 * Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.1.9-0.0
 - 0.1.9
 

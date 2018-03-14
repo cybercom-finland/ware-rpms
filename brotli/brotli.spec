@@ -10,7 +10,7 @@
 
 Name:           brotli
 Version:        0.4.0
-Release:        104.2.%{gitrev}
+Release:        104.2.%{gitrev}%{?dist}
 Summary:        Brotli compression format
 
 License:        MIT

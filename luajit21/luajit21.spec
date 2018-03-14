@@ -1,11 +1,10 @@
 %define rname luajit
-%define date 20161104
+%define date 20171103
 
 Name:           %{rname}21
 Version:        2.1.0
-Release:        0.1.%{date}%{?dist}
+Release:        0.0.%{date}%{?dist}
 Summary:        Just-In-Time Compiler for Lua
-Group:          Development/Languages
 License:        MIT
 URL:            http://luajit.org/
 Source0:        https://github.com/openresty/luajit2/archive/v2.1-%{date}.tar.gz#/%{rname}2-2.1-%{date}.tar.gz
@@ -21,7 +20,6 @@ Lua interpreter and can be deployed as a drop-in replacement.
 
 %package devel
 Summary:        Development files for %{rname}
-Group:          Development/Languages
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Conflicts:      luajit-devel = 2.0.3
 Conflicts:      luajit-devel = 2.0.4
@@ -54,7 +52,7 @@ make amalg Q= E=@: PREFIX=%{_prefix} TARGET_STRIP=: \
 %install
 # PREREL= - disable -betaX suffix
 # INSTALL_TNAME - executable name
-%{__make} install DESTDIR=%{?buildroot} PREFIX=%{_prefix} \
+%make_install PREFIX=%{_prefix} \
               %{?multilib_flag}
 
 rm -rf _tmp_html ; mkdir _tmp_html
@@ -82,7 +80,10 @@ find %{buildroot} -type f -name *.a -delete
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-* Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 2.1.0-0.0.20161104%{?dist}
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 2.1.0-0.0.20171103
+- 20171103
+
+* Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 2.1.0-0.0.20161104
 - v2.1-20161104
 
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-4

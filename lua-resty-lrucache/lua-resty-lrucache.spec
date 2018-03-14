@@ -18,8 +18,8 @@
 %define lua51dir %{_builddir}/lua51-%{name}-%{version}-%{release}
 
 Name:           lua-resty-lrucache
-Version:        0.04
-Release:        0.2%{?dist}
+Version:        0.08rc1
+Release:        0.0%{?dist}
 Summary:        Lua-land LRU Cache based on LuaJIT FFI
 
 Group:          Development/Libraries
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 13 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 0.08rc1-0.0
+- 0.08rc1
+
 * Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.04-0.1
 - fix build in F24
 
