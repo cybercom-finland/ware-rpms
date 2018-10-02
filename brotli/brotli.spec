@@ -1,190 +1,190 @@
-# run get.sh and then update these
-%define gitrev 211
-%define githash 5db62dc
-
-%if 0%{?rhel} && 0%{?rhel} <= 7
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%endif
-
-
 Name:           brotli
-Version:        0.4.0
-Release:        104.2.%{gitrev}%{?dist}
-Summary:        Brotli compression format
+Version:        1.0.3
+Release:        0.0%{?dist}
+Summary:        Lossless compression algorithm
 
 License:        MIT
 URL:            https://github.com/google/brotli
-Source0:        https://github.com/google/brotli/archive/v%{version}.tar.gz#/google-%{name}-v%{version}-%{gitrev}-g%{githash}.tar.gz
-Patch1:         0001-add-.cc-files-too-to-lib.patch
-Patch2:         0002-handle-deps-better-with.patch
-Patch3:         0003-tests-remove-created-test-files.patch
-Patch4:         0004-tests-limit-test-files-more-strictly.patch
+Source0:        https://github.com/google/brotli/archive/v%{version}.tar.gz
 
-BuildRequires:  gcc-c++
-BuildRequires:  libstdc++-devel
-%if 0%{?rhel} && 0%{?rhel} <= 7
+BuildRequires:  gcc-c++ gcc cmake
+%if 0%{?rhel}
 BuildRequires:  python-devel
 %else
-BuildRequires:  python2-devel
-BuildRequires:  python3-devel
-%endif
-%if 0%{?fedora} >= 25
-BuildRequires:  perl
+BuildRequires:  python2-devel python3-devel
 %endif
 
 %description
-Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling, with a compression ratio comparable to the best currently available general-purpose compression methods. It is similar in speed with deflate but offers more dense compression.
+Brotli is a generic-purpose lossless compression algorithm that compresses
+data using a combination of a modern variant of the LZ77 algorithm, Huffman
+coding and 2nd order context modeling, with a compression ratio comparable
+to the best currently available general-purpose compression methods.
+It is similar in speed with deflate but offers more dense compression.
 
-This package installs a command line utility.
+%package -n python2-%{name}
+Summary:        Lossless compression algorithm (python 2)
+%if 0%{?rhel}
+Requires: python
+Obsoletes: python-%{name}
+%else
+Requires: python2
+%{?python_provide:%python_provide python2-%{name}}
+%endif
 
-
-%package        -n python-brotli
-Summary:        Brotli compression format
-
-%description    -n python-brotli
-Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling, with a compression ratio comparable to the best currently available general-purpose compression methods. It is similar in speed with deflate but offers more dense compression.
-
+%description -n python2-%{name}
+Brotli is a generic-purpose lossless compression algorithm that compresses
+data using a combination of a modern variant of the LZ77 algorithm, Huffman
+coding and 2nd order context modeling, with a compression ratio comparable
+to the best currently available general-purpose compression methods.
+It is similar in speed with deflate but offers more dense compression.
 This package installs a Python 2 module.
 
 
-%if 0%{?rhel} && 0%{?rhel} <= 7
+%if 0%{?rhel}
 %else
-%package        -n python3-brotli
-Summary:        Brotli compression format
+%package -n python3-%{name}
+Requires: python3
+Summary:        Lossless compression algorithm (python 3)
+%{?python_provide:%python_provide python3-%{name}}
 
-%description    -n python3-brotli
-Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling, with a compression ratio comparable to the best currently available general-purpose compression methods. It is similar in speed with deflate but offers more dense compression.
-
+%description -n python3-%{name}
+Brotli is a generic-purpose lossless compression algorithm that compresses
+data using a combination of a modern variant of the LZ77 algorithm, Huffman
+coding and 2nd order context modeling, with a compression ratio comparable
+to the best currently available general-purpose compression methods.
+It is similar in speed with deflate but offers more dense compression.
 This package installs a Python 3 module.
 %endif
 
-%package devel
-Summary:        Brotli compression format
+%package -n %{name}-devel
+Summary:        Lossless compression algorithm (development files)
+Requires: %{name}%{?_isa} = %{version}-%{release} 
 
-%description    devel
-Brotli devel
-
-%package docs
-Summary:        Brotli docs
-
-%description docs
-Brotli docs
+%description -n %{name}-devel
+Brotli is a generic-purpose lossless compression algorithm that compresses
+data using a combination of a modern variant of the LZ77 algorithm, Huffman
+coding and 2nd order context modeling, with a compression ratio comparable
+to the best currently available general-purpose compression methods.
+It is similar in speed with deflate but offers more dense compression.
+This package installs the development files
 
 %prep
-%setup -q -n google-brotli-%{githash}
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-cp -a tests tests.orig
-
+%autosetup
+# fix permissions for -debuginfo
+# rpmlint will complain if I create an extra %%files section for
+# -debuginfo for this so we'll put it here instead
+%{__chmod} 644 c/enc/*.[ch]
+%{__chmod} 644 c/include/brotli/*.h
+%{__chmod} 644 c/tools/brotli.c
 %build
-%if 0%{?rhel} && 0%{?rhel} <= 7
-%{__python} setup.py build
-%else
+
+mkdir -p build
+cd build
+%cmake .. -DCMAKE_INSTALL_PREFIX="%{_prefix}" \
+    -DCMAKE_INSTALL_LIBDIR="%{_libdir}"
+%make_build
+cd ..
 %py2_build
+%if 0%{?rhel}
+%else
 %py3_build
 %endif
 
-%{__make} %{?_smp_mflags} CFLAGS="%{optflags} -fPIC" CXXFLAGS="%{optflags} -fPIC" LDFLAGS="-pie" all
-
 %install
-%if 0%{?rhel} && 0%{?rhel} <= 7
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
-%else
+cd build
+%make_install
+
+# I couldn't find the option to not build the static libraries
+%__rm "%{buildroot}%{_libdir}/"*.a
+
+cd ..
+# Must do the python2 install first because the scripts in /usr/bin are
+# overwritten with every setup.py install, and in general we want the
+# python3 version to be the default. If, however, we're installing separate
+# executables for python2 and python3, the order needs to be reversed so
+# the unversioned executable is the python2 one.
 %py2_install
+%if 0%{?rhel}
+%else
 %py3_install
 %endif
-mkdir -p $RPM_BUILD_ROOT/%{_bindir}
-install -m 755 bin/bro $RPM_BUILD_ROOT/%{_bindir}/brotli
-mkdir -p $RPM_BUILD_ROOT/%{_libdir}
-
-for a in enc dec common; do
-  mkdir -p $RPM_BUILD_ROOT/%{_includedir}/brotli/"$a"
-  perl -pi -e 's,\#include \"\.\./common/(.*?)\",#include <brotli/common/$1>,' "$a"/*.h
-  perl -pi -e 's,\#include \"\./(.*?)\",#include <brotli/'"$a"'/$1>,' "$a"/*.h
-  install -m 0644 "$a"/*.h $RPM_BUILD_ROOT/%{_includedir}/brotli/"$a"/
+%{__install} -dm755 "%{buildroot}%{_mandir}/man3"
+cd docs
+for i in *.3;do
+%{__install} -m644 "$i" "%{buildroot}%{_mandir}/man3/${i}brotli"
 done
-install -m 0644 include/brotli/*.h $RPM_BUILD_ROOT/%{_includedir}/brotli/
 
-install -m 0644 libbrotli.a $RPM_BUILD_ROOT/%{_libdir}/
+%ldconfig_scriptlets
 
 %check
-%if 0%{?rhel} && 0%{?rhel} <= 7
-rm -rf tests
-cp -a tests.orig tests
-%{__python} setup.py test
+cd build
+ctest -V
+cd ..
+%if 0%{?rhel}
 %else
-# It does not clean tests directory properly after run so next test fails
-rm -rf tests
-cp -a tests.orig tests
+# Older pythons distutils do not know distribution option: test_suite
 %{__python2} setup.py test
-rm -rf tests
-cp -a tests.orig tests
 %{__python3} setup.py test
 %endif
 
 %files
-%doc README.md
 %{_bindir}/brotli
-
-%files -n python-brotli
-%doc README.md
+%{_libdir}/*.so.*
 %license LICENSE
-%if 0%{?rhel} && 0%{?rhel} <= 7
-%{python_sitearch}/*
-%else
+
+# Note that there is no %%files section for the unversioned python module
+# if we are building for several python runtimes
+%files -n python2-%{name}
 %{python2_sitearch}/*
-
-%files -n python3-brotli
-%doc README.md
 %license LICENSE
+
+%if 0%{?rhel}
+%else
+%files -n python3-%{name}
 %{python3_sitearch}/*
+%license LICENSE
 %endif
 
-%files devel
-%license LICENSE
-%{_includedir}/brotli/*.h
-%{_includedir}/brotli/*/*.h
-%{_libdir}/*.a
+%files -n %{name}-devel
+%{_includedir}/*
+%{_libdir}/*.so
+%{_libdir}/pkgconfig/*
+%{_mandir}/man3/*
 
-%files docs
-%license LICENSE
-%doc README.md docs/*
 
 %changelog
-* Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-104.1.211
-- add public includes
+* Mon Mar 19 2018 Markus Linnala <Markus.Linnala@cybercom.com> - 1.0.3-0.0
+- build for rhel too
 
-* Tue Nov 22 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-104.0.211
-- 0.4.0 gitrev 211
+* Fri Mar 02 2018 Travis Kendrick <pouar@pouar.net> - 1.0.3-1
+- update to 1.0.3
 
-* Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-103.1.102
-- fix rhel rules in spec
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
-* Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-103.0.102
-- build only libbrotli.a
-- fix Makefile
+* Sat Feb 03 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1.0.1-2
+- Switch to %%ldconfig_scriptlets
 
-* Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-102.0.102
-- update to gitrev 102
+* Fri Sep 22 2017 Travis Kendrick <pouar@pouar.net> - 1.0.1-1
+- update to 1.0.1
 
-* Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-101.1.75
-- fix includes again
+* Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
-* Wed Aug  3 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-101.0.75
-- fix includes
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
-* Thu Jun 30 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.4.0-100.0.75
-- 0.4.0
-- add brotli-docs package
+* Tue May 23 2017 Travis Kendrick <pouar@pouar.net> - 0.6.0-4
+- add man pages
 
-* Thu Apr 14 2016 Markus Linnala <Markus.Linnala@cybercom.com> - 0.3.0-100.0.69
-- for RHEL-7
+* Sun May 14 2017 Travis Kendrick <pouar@pouar.net> - 0.6.0-3
+- wrong directory for ctest
+- LICENSE not needed in -devel
+- fix "spurious-executable-perm"
+- rpmbuild does the cleaning for us, so 'rm -rf %%{buildroot}' isn't needed
 
-* Sat Mar 19 2016 Leigh Scott <leigh123linux@googlemail.com> - 0.3.0-1
-- update to latest version
+* Sat May 13 2017 Travis Kendrick <pouar@pouar.net> - 0.6.0-2
+- include libraries and development files
 
-* Wed Sep 23 2015 Leigh Scott <leigh123linux@googlemail.com> - 0.2.0-1
-- First build
+* Sat May 06 2017 Travis Kendrick <pouar@pouar.net> - 0.6.0-1
+- Initial build
